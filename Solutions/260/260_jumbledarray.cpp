@@ -13,41 +13,46 @@
 
 using namespace std;
 
-int* createArray(std::string *inputArray, int size){
+int* createArray(std::string *inputArray, int size){  //need the size as you cannot get it from a pointer
     int numMinus = 0;
     int numPlus = 0;
-    int numNone = 0;
 
-    queue<int> inputQueue;
+    queue<int> inputQueue;     //holds numbers depending on + and - counting away from 0
 
     for (int i=0; i<size; i++){
-        if (inputArray[i] == "+" ){    //I'm assuming there's no reason to handle case "None" 
+        if (inputArray[i] == "+"){
             numPlus++;
             inputQueue.push(numPlus);
         }
-        else if (inputArray[i] == "-"){
+        else {  //counting "None" as - but could go either way
             inputQueue.push(0-numMinus);
             numMinus++;
         }
-        else {
-            numNone++;
-        }
     }
     
-    int* outputArray = new int[size - numNone];
-    for (int i=0; !inputQueue.empty(); i++){
+    int* outputArray = new int[size];
+    for (int i=0; !inputQueue.empty(); i++){    //shift numbers up depending on number of -'s so lowest number is 0
         int numtoPush = inputQueue.front() + numMinus-1;
         inputQueue.pop();
         outputArray[i] = numtoPush;
-        cout << outputArray[i] << ' ';
     }
 
     return outputArray;
 }
 
 int main(){
-    std::string inputArray[5] = {"None", "+", "+", "-", "+"};
+    std::string inputArray[] = {"None", "+", "+", "-", "+"};
     int size = sizeof(inputArray)/sizeof(inputArray[0]);
-    createArray(inputArray, size);
+    int *outputArray = createArray(inputArray, size);
+
+     //print array for visual purposes
+    cout << '[';
+    for (int i=0; i<size; i++){
+        cout << outputArray[i];
+        if (!(i==size-1))
+            cout << ", ";
+    }
+    cout << ']';
+
     return 0;
 }
